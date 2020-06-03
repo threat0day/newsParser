@@ -1,30 +1,36 @@
 import os
 from Loger import Loger
 
-#сохраняет страницу
+
+# сохраняет страницу
 class ArticleSaver:
-    #сохранить в файл
-    def WriteToFile(self,content,URL,encodeArticle):
-        path=URL.replace('https://','').replace('http://','') .split('/')
+
+    def write_to_File(self, content, url, encode_article):
+        """
+        сохранить в файл
+        :param content:
+        :param url:
+        :param encode_article:
+        :return:
+        """
+        path = url.replace('https://', '').replace('http://', '').split('/')
         try:
-            if not (path[len(path)-1] == ''):
-                filename=path[len(path)-1]+'.txt'
+            if not (path[len(path) - 1] == ''):
+                filename = path[len(path) - 1] + '.txt'
             else:
-                filename=path[len(path)-2]+'.txt'
-            filename=filename.replace('.shtml','').replace('.html','').replace('.htm','')
+                filename = path[len(path) - 2] + '.txt'
+            filename = filename.replace('.shtml', '').replace('.html', '').replace('.htm', '')
             path.pop()
 
-            fullPath= os.getcwd()
+            full_path: str = os.getcwd()
             for x in path:
-               fullPath+="\\"+x+"\\"
-               if not os.path.exists(fullPath):
-                    os.makedirs(fullPath)
-            f= open(fullPath+filename,"w+",encoding=encodeArticle)
+                full_path += "\\" + x + "\\"
+                if not os.path.exists(full_path):
+                    os.makedirs(full_path)
+            f = open(full_path + filename, "w+", encoding=encode_article)
             f.write(content)
             f.close()
             Loger.GetInstance().WriteLog("Save success")
         except Exception as e:
-            Loger.GetInstance().WriteLog("Save error:"+str(e))
+            Loger.GetInstance().WriteLog("Save error:" + str(e))
             pass
-
-              

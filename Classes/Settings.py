@@ -2,67 +2,76 @@ import configparser
 import os
 import distutils.util
 
-#настройки приложения
-class Settings:
 
+# настройки приложения
+class Settings:
     __instance = None
-    #получить инстанс Settings
+
+    # получить инстанс Settings
     @staticmethod
     def GetInstance():
 
         if Settings.__instance == None:
-           Settings()
-        return Settings.__instance 
+            Settings()
+        return Settings.__instance
 
     def __init__(self):
         writeLogs = True
 
         if Settings.__instance == None:
-           Settings.__instance = self
-  
-    #если False, то логи не выводятся  
+            Settings.__instance = self
+
+    # если False, то логи не выводятся
     @property
-    def writeLogs(self):                       
+    def writeLogs(self):
         return self._writeLogs
+
     @writeLogs.setter
-    def writeLogs(self, value):             
+    def writeLogs(self, value):
         self._writeLogs = value
+
     _writeLogs = True
 
-    #ширина текста
+    # ширина текста
     @property
-    def wightText(self):                       
+    def wightText(self):
         return self._wightText
+
     @wightText.setter
-    def wightText(self, value):             
+    def wightText(self, value):
         self._wightText = value
+
     _wightText = 80
 
-    #Включать табуляцию в начале абзаца
+    # Включать табуляцию в начале абзаца
     @property
-    def beginTab(self):                       
+    def beginTab(self):
         return self._beginTab
+
     @beginTab.setter
-    def beginTab(self, value):             
+    def beginTab(self, value):
         self._beginTab = value
+
     _beginTab = True
 
-    #Показывать ссылки в тексте
+    # Показывать ссылки в тексте
     @property
-    def showURL(self):                       
+    def showURL(self):
         return self._showURL
+
     @showURL.setter
-    def showURL(self, value):             
+    def showURL(self, value):
         self._showURL = value
+
     _showURL = None
 
-    #Загружает настройки из ini файла
+    # Загружает настройки из ini файла
     def LoadSettings(self):
         try:
             if os.path.isfile(os.getcwd() + "\\" + 'Settings.ini'):
                 config = configparser.ConfigParser()
                 config.read(os.getcwd() + "\\" + 'Settings.ini')
-                    
+
                 self.GetInstance().writeLogs = bool(distutils.util.strtobool(config['Common']['writeLogs']))
                 self.GetInstance().showURL = bool(distutils.util.strtobool(config['Text']['showURL']))
                 self.GetInstance().beginTab = bool(distutils.util.strtobool(config['Text']['beginTab']))
@@ -71,19 +80,19 @@ class Settings:
             else:
                 self.InitIniFile()
         except Exception as e:
-               print("Settings not load:" + str(e))
+            print("Settings not load:" + str(e))
 
-    #Сохраняет настройки в ini файл
+    # Сохраняет настройки в ini файл
     def SaveSettings(self):
         config = configparser.ConfigParser()
         config['Common']['writeLogs'] = str(self.writeLogs)
         config['Text']['showURL'] = str(self.showURL)
         config['Text']['beginTab'] = str(self.beginTab)
         config['Text']['wightText'] = self.wightText
-        with open(os.getcwd() + "\\" + 'Settings.ini', 'w') as configfile:  
+        with open(os.getcwd() + "\\" + 'Settings.ini', 'w') as configfile:
             config.write(configfile)
 
-    #Значения настроек поумолчанию
+    # Значения настроек поумолчанию
     def InitIniFile(self):
         config = configparser.ConfigParser()
         config.add_section('Common')
@@ -94,7 +103,5 @@ class Settings:
         config['Text']['beginTab'] = 'True'
         config['Text']['wightText'] = '80'
 
-        with open(os.getcwd() + "\\" + 'Settings.ini', 'w') as configFile:  
+        with open(os.getcwd() + "\\" + 'Settings.ini', 'w') as configFile:
             config.write(configFile)
-
-
